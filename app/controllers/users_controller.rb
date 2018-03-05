@@ -3,6 +3,7 @@ class UsersController < ApplicationController
 
   def index
     @users = User.all
+    intercom_shutdown unless @user == current_user
   end
 
   def show
@@ -10,6 +11,14 @@ class UsersController < ApplicationController
     unless @user == current_user
       redirect_to root_path, :alert => "Access denied."
     end
+  end
+
+  protected
+
+  def intercom_shutdown
+    binding.pry
+    IntercomRails::ShutdownHelper.intercom_shutdown(session, cookies)
+    binding.pry
   end
 
 end
